@@ -15,7 +15,7 @@ Options:
 
 """
 
-__version__ = "0.1.2"
+__version__ = "0.1.2_SB"
 
 
 import sys
@@ -42,6 +42,7 @@ def main():
     setup_logging(arguments)
     LOG.info('Executing treon version %s', __version__)
     thread_count = arguments['--threads'] or DEFAULT_THREAD_COUNT
+
     notebooks = get_notebooks_to_test(arguments)
     tasks = [Task(notebook) for notebook in notebooks]
     print_test_collection(notebooks)
@@ -111,10 +112,14 @@ def get_notebooks_to_test(args):
     result = []
 
     if os.path.isdir(path):
-        LOG.info('Recursively scanning %s for notebooks...', path)
+        recursive = args['--recursive'] or True
+        LOG.info('Scanning %s for notebooks...', path)
         path = os.path.join(path, '')  # adds trailing slash (/) if it's missing
-        glob_path = path + '**/*.ipynb'
-        result = glob.glob(glob_path, recursive=True)
+        if recursive:
+            glob_path = path + '**/*.ipynb'
+        else:
+            glob_path = path + '*.ipynb'
+        result = glob.glob(glob_path, recursive=recursive)
     elif os.path.isfile(path):
         if path.lower().endswith('.ipynb'):
             LOG.debug('Testing notebook %s', path)
@@ -127,4 +132,4 @@ def get_notebooks_to_test(args):
     if not result:
         sys.exit('No notebooks to test in {path}'.format(path=path))
 
-    return result
+    return result.sort()
