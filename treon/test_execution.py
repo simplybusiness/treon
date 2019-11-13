@@ -16,6 +16,7 @@ def _remove_marked_cells(cells):
 
 def execute_notebook(path):
     notebook = nbformat.read(path, as_version=4)
+    notebook.cells.insert(0, syspath_cell())
     notebook.cells.extend([unittest_cell(), doctest_cell()])
     notebook.cells = _remove_marked_cells(notebook.cells)
     processor = ExecutePreprocessor(timeout=-1, kernel_name='python3')
@@ -93,5 +94,13 @@ def doctest_cell():
 
         if r.attempted == 0:
             clear_output()
+    """)
+    return new_code_cell(source=source)
+
+
+def syspath_cell():
+    source = textwrap.dedent("""
+      import sys
+      sys.path.append('../')
     """)
     return new_code_cell(source=source)

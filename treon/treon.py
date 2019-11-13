@@ -131,5 +131,5 @@ def get_notebooks_to_test(args):
 
     if not result:
         sys.exit('No notebooks to test in {path}'.format(path=path))
-
-    return result.sort()
+    result.sort()
+    return result
