@@ -15,7 +15,7 @@ Options:
 
 """
 
-__version__ = "0.1.2_SB"
+__version__ = "0.1.4"
 
 
 import sys
