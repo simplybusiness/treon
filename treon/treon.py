@@ -2,7 +2,7 @@
 """
 Usage:
   treon
-  treon [PATH] [--threads=<number>] [-v]
+  treon [PATH] [--threads=<number>] [--recursive=<true_false>] [-v]
 
 Arguments:
   PATH                File or directory path to find notebooks to test. Searches recursively for directory paths. [default: current working directory]
@@ -12,10 +12,11 @@ Options:
   -v --verbose        Print detailed output for debugging.
   -h --help           Show this screen.
   --version           Show version.
+  --recursive=<true_false> Recursive scan. [default: False]
 
 """
 
-__version__ = "0.1.4"
+__version__ = "0.1.8"
 
 
 import sys

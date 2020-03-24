@@ -7,18 +7,19 @@ from nbconvert.preprocessors import ExecutePreprocessor
 
 
 def _cell_contains_marker(cell):
-    return "@test_ignore" in cell["source"]
+    return "@test" in cell["source"]
 
 
-def _remove_marked_cells(cells):
-    return [cell for cell in cells if not _cell_contains_marker(cell)]
+def _remove_unmarked_cells(cells):
+    return [cell for cell in cells if _cell_contains_marker(cell)]
 
 
 def execute_notebook(path):
     notebook = nbformat.read(path, as_version=4)
+    notebook.cells = _remove_unmarked_cells(notebook.cells)
+
     notebook.cells.insert(0, syspath_cell())
     notebook.cells.extend([unittest_cell(), doctest_cell()])
-    notebook.cells = _remove_marked_cells(notebook.cells)
     processor = ExecutePreprocessor(timeout=-1, kernel_name='python3')
     processor.preprocess(notebook, metadata(path))
     return parse_test_result(notebook.cells)
